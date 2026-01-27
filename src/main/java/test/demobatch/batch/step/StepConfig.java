@@ -13,6 +13,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
 import test.demobatch.model.InputData;
 import test.demobatch.model.OutputData;
+import test.demobatch.model.User;
+import test.demobatch.model.UserOutput;
 
 @Configuration
 @RequiredArgsConstructor
@@ -35,12 +37,12 @@ public class StepConfig {
     }
 
     @Bean(name = "stepB")
-    public Step stepB(@Qualifier("restInputReader") ItemReader<InputData> readerB,
-                      @Qualifier("itemProcessor") ItemProcessor<InputData, OutputData> processorB,
-                      @Qualifier("jdbcBatchItemWriter") ItemWriter<OutputData> writerB) {
+    public Step stepB(@Qualifier("feignItemReader") ItemReader<User> readerB,
+                      @Qualifier("apiItemProcessor") ItemProcessor<User, UserOutput> processorB,
+                      @Qualifier("userWriter") ItemWriter<UserOutput> writerB) {
 
         return new StepBuilder("stepB", jobRepository)
-                .<InputData, OutputData>chunk(100)
+                .<User, UserOutput>chunk(100)
                 .transactionManager(transactionManager)
                 .reader(readerB)
                 .processor(processorB)
