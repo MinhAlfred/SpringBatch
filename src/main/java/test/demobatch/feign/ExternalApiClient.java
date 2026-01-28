@@ -12,4 +12,7 @@ public interface ExternalApiClient {
 
     @GetMapping("/posts")
     List<User> getData();
+
+    @GetMapping("/posts/{id}")
+    User getDataById(@PathVariable("id") Long id);
 }
