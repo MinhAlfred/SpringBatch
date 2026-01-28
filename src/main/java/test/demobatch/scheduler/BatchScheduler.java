@@ -1,6 +1,7 @@
 package test.demobatch.scheduler;
 
 import lombok.RequiredArgsConstructor;
+import net.javacrumbs.shedlock.spring.annotation.EnableSchedulerLock;
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 import org.springframework.batch.core.job.Job;
 import org.springframework.batch.core.job.parameters.JobParameters;
@@ -23,12 +24,12 @@ public class BatchScheduler {
     @Scheduled(cron = "0 */1 * * * *") // mỗi phút
     @SchedulerLock(
             name = "daily9amJobScheduler",
-            lockAtMostFor = "PT2M",
-            lockAtLeastFor = "PT30S"
+            lockAtMostFor = "PT30S",
+            lockAtLeastFor = "PT5S"
     )
     public void runJob() throws Exception {
         JobParameters params = new JobParametersBuilder()
-                .addLong("job A", System.currentTimeMillis()) // bắt buộc unique
+                .addLong("jobA", System.currentTimeMillis()) // bắt buộc unique
                 .toJobParameters();
 
         jobLauncher.start(daily9amJob, params);
