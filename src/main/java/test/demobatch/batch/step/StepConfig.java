@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.web.client.RestTemplate;
 import test.demobatch.batch.reader.ApiItemReader;
 import test.demobatch.batch.tasklet.ApiSyncTasklet;
 import test.demobatch.feign.ExternalApiClient;
@@ -22,8 +21,6 @@ import test.demobatch.model.InputData;
 import test.demobatch.model.OutputData;
 import test.demobatch.model.User;
 import test.demobatch.model.UserOutput;
-
-import java.util.Arrays;
 
 @Configuration
 @RequiredArgsConstructor
@@ -46,7 +43,7 @@ public class StepConfig {
                       @Qualifier("outputWriter") ItemWriter<OutputData> writerA) {
 
         return new StepBuilder("stepA", jobRepository)
-                .<InputData, OutputData>chunk(100)
+                .<InputData, OutputData>chunk(10)
                 .reader(readerA)
                 .transactionManager(transactionManager)
                 .processor(processorA)
@@ -60,7 +57,7 @@ public class StepConfig {
                       @Qualifier("userWriter") ItemWriter<UserOutput> writerB) {
 
         return new StepBuilder("stepB", jobRepository)
-                .<User, UserOutput>chunk(100)
+                .<User, UserOutput>chunk(10)
                 .transactionManager(transactionManager)
                 .reader(readerB)
                 .processor(processorB)
